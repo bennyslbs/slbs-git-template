@@ -1,0 +1,53 @@
+#!/bin/bash
+echo `basename $0`: $@
+
+# Add hostId (optional) and branch to the beginning of the first line
+# The id have this form:
+# 'branch'[@host_id]:
+# Where
+# 'branch' is the name of the branch.
+# - If 'branch' is 'master' only m is printet (no '')
+# - If no branch a - is printed (no '')
+# [@host_id] "@host_id" is optional
+# (included if GIT_HOOKS_HOST_ID is set) [] just shows that it is optional
+
+# Note: For merge commits this hook (commit-msg) is not executed,
+#       include this script as part of prepare-commit-msg
+
+host_id=$GIT_HOOKS_HOST_ID
+
+host_string=${host_id:+@$host_id} # Set @ in front of host_id if host_id set
+
+# http://stackoverflow.com/questions/4086896/including-the-current-branch-name-in-the-commit-template
+# http://stackoverflow.com/questions/1593051/how-to-programmatically-determine-the-current-checked-out-git-branch
+
+branch=`git symbolic-ref --short -q HEAD` # Get the branch name, empty if no branch, but err code.
+
+# 'man bash' and search for 'Parameter Expansion'
+# (or http://www.gnu.org/software/bash/manual/bash.html#Shell-Parameter-Expansion)
+branch=${branch:+"'$branch'"} # Encapsulate branch in '' (just as git normally does in commit messages
+branch=${branch:=-} # If not a branch set branch to -
+branch=`echo ${branch}|sed "s/^'master'$/m/"` # Shorten 'master' branch to m
+
+id_msg=$branch$host_string:
+
+# Before inserting the id_msg all empty lines must be removed in the beginning of the file
+# http://stackoverflow.com/questions/1935081/remove-leading-whitespace-from-file
+sed --in-place '/./,$!d' "$1"
+# Optionally also remove comment lines, but not implemented
+
+# Check if the commit message is ok before inserting the id_msg,
+# I does not like to get commits with just the id_msg:)
+
+num_commit_msg_lines=`cat "$1"|sed 's/^#.*$//'|sed '/./,$!d'|wc -l`
+if [ "$num_commit_msg_lines" -ne "0" ]; then
+    # There is a commit message
+    # Check if the first chars is equal to id_msg, if not add it
+    line1=`head -n 1 "$1"`
+    if [ "${line1:0:${#id_msg}}" != "$id_msg" ]; then
+            sed --in-place "1s/^/$id_msg/" "$1"
+    fi
+else
+    echo "Error: Commit message is missing"
+    exit 1
+fi
