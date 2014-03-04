@@ -1,4 +1,8 @@
 # -*-org-*-
+* SLBS Git Template
+This is an alternative git template folder, actually it only contains
+special hooks, but might change in the future.
+
 * GIT HOOKS
 
 The hooks can contain different implementations.
@@ -40,14 +44,27 @@ The @ is prepended to the content in GIT_HOOKS_HOST_ID.
 Set environment variable GIT_HOOKS_ROOT to the root of this package -
 this folder.
 
-** Optionally Set GIT_HOOKS_HOST_ID
+*** Optionally Set GIT_HOOKS_HOST_ID
 Set environment variable GIT_HOOKS_HOST_ID if you want to include
 a host ID, e.g. hostname:
 #+begin_src bash
 export GIT_HOOKS_HOST_ID=`hostname`
 #+end_src
 
-** Optionally disable the hooks
+*** Use the hooks for new git repositories
+Add the following code (not incl. the #+begin/end_src lines) to
+file:~/.gitconfig:
+#+begin_src conf
+[init]
+     templatedir = /path/to/slbs-git-template/template
+#+end_src
+*** Use the hooks for existing git repositories
+- Do the steps in [[Use the hooks for new git repositories]].
+- Run git init in each git repository you want to use those hooks.
+- Note existing files will not be deleted, but overwritten, e.g. the
+- Warning: .git/description file will be overwritten!
+
+*** Optionally disable the hooks (for single commands)
 This is intended to be a switch to set for single commands where the
 hooks is not wanted, then set the variable HOOKS=empty (or any
 non-existing impl ... but more implementations might come in the
@@ -57,12 +74,12 @@ future.
 HOOKS=empty git ...
 #+end_src
 
-* Implementations
-** empty
+** Implementations
+*** empty
 Contains no hooks - and will newer contain any hooks.
 
-** default
-*** commit-msg
+*** default
+**** commit-msg
 The commit-msg hook implements the above functionality.
 
 *** prepare-commit-msg
