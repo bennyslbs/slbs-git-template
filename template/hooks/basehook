@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# Use env var HOOKS to determine which implementation to use
+
+hooks_impl=${HOOKS:=default} # If HOOKS isn't set use default implementation
+
+git_hook_file=$GIT_HOOKS_ROOT/impl/$hooks_impl/`basename $0`
+
+# If hook file exists, call it with all args except $0
+if [ -x $git_hook_file ]; then
+    $git_hook_file "$@"
+fi
