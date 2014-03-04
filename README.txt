@@ -65,3 +65,7 @@ Contains no hooks - and will newer contain any hooks.
 *** commit-msg
 The commit-msg hook implements the above functionality.
 
+*** prepare-commit-msg
+The prepare-commit-msg calls commit-msg hook if it is a merge. This is
+done since commit-msg hook is not (always?) run during commit of
+merges.
