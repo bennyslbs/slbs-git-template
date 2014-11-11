@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>(SLBS  (export-snippet (:back-end html :value <br> :begin 6 :end 19 :post-blank 0 :parent #0)) Git Template)</title>
+<meta name="author" content="(Benny Simonsen)"/>
+<link rel="stylesheet" href="http://lib.slbs.dk/reveal.js/v0.3-1123-g08fb6cb/css/reveal.min.css"/>
+<link rel="stylesheet" href="http://lib.slbs.dk/reveal.js/v0.3-1123-g08fb6cb/css/theme/simple.css" id="theme"/>
+
+<link rel="stylesheet" href="http://lib.slbs.dk/reveal.js/v0.3-1123-g08fb6cb/css/print/pdf.css" type="text/css" media="print"/>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+<section>
+<h1>SLBS <br>Git Template</h1>
+<h2>Benny Simonsen</h2>
+<h2><a href="mailto:benny@slbs.dk">benny@slbs.dk</a></h2>
+<h2></h2></section>
+<section>
+<h2>Table of Contents</h2><ul>
+<li>
+<a href="#sec-1">SLBS Git Template</a>
+</li>
+<li>
+<a href="#sec-2">GIT HOOKS</a>
+<ul>
+<li>
+<a href="#sec-2-1">The behavior for impl/<a href="#sec-2-3-2">2.3.2</a></a>
+</li>
+<li>
+<a href="#sec-2-2">Usage</a>
+<ul>
+<li>
+<a href="#sec-2-2-1">Set <code>GIT_HOOKS_ROOT</code></a>
+</li>
+<li>
+<a href="#sec-2-2-2">Optionally Set <code>GIT_HOOKS_HOST_ID</code></a>
+</li>
+<li>
+<a href="#sec-2-2-3">Use the hooks for new git repositories</a>
+</li>
+<li>
+<a href="#sec-2-2-4">Use the hooks for existing git repositories</a>
+</li>
+<li>
+<a href="#sec-2-2-5">Optionally disable the hooks (for single commands)</a>
+</li>
+</ul>
+<li>
+<a href="#sec-2-3">Implementations</a>
+<ul>
+<li>
+<a href="#sec-2-3-1">empty</a>
+</li>
+<li>
+<a href="#sec-2-3-2">default</a>
+</li>
+</ul>
+</section>
+
+<section>
+<section id="sec-1" >
+
+<h2><span class="section-number-2">1</span> SLBS Git Template</h2>
+<p>
+This is an alternative git template folder, actually it only contains
+special hooks, but might change in the future.
+</p>
+</section>
+</section>
+<section>
+<section id="sec-2" >
+
+<h2><span class="section-number-2">2</span> GIT HOOKS</h2>
+<p>
+The hooks can contain different implementations.
+At the moment there is <a href="#sec-2-3-2">2.3.2</a> and <a href="#sec-2-3-1">2.3.1</a>.
+</p>
+
+<p>
+<a href="#sec-2-3-1">2.3.1</a> implementation is empty. It is for selecting No hooks at all.
+</p>
+
+<p>
+Which hooks implementation to use set the HOOKS environment variable.
+Eg. on the command line:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh"><span style="color: #a0522d;">HOOKS</span>=empty git ...
+</pre>
+</div>
+
+</section>
+<section id="sec-2-1" >
+
+<h3><span class="section-number-3">2.1</span> The behavior for impl/<a href="#sec-2-3-2">2.3.2</a></h3>
+<p>
+Those git hooks are for prefix first line with a commit message with
+the branch that the commit is made on.
+</p>
+
+<p>
+Further an optional ID for the host the commit is created on can be
+included.
+</p>
+
+<p>
+Add hostId (optional) and branch to the beginning of the first line of
+commit messages.
+</p>
+
+<p>
+The id have this form:
+='branch'[@host<sub>id</sub>]:=
+Where
+'branch' is the name of the branch.
+</p>
+<ul class="org-ul">
+<li>If 'branch' is 'master' only m is printed (no '')
+</li>
+<li>If no branch a - is printed (no '')
+</li>
+<li>Else the branch name in '' is printed
+</li>
+</ul>
+<p>
+<code>[@host_id]</code> "<code>@host_id</code>" is optional
+(included if <code>GIT_HOOKS_HOST_ID</code> is set) [] just shows that it is
+optional.
+The @ is prepended to the content in <code>GIT_HOOKS_HOST_ID</code>.
+</p>
+</section>
+<section id="sec-2-2" >
+
+<h3><span class="section-number-3">2.2</span> Usage</h3>
+</section>
+<section id="sec-2-2-1" >
+
+<h4><span class="section-number-4">2.2.1</span> Set <code>GIT_HOOKS_ROOT</code></h4>
+<p>
+Set environment variable <code>GIT_HOOKS_ROOT</code> to the root of this package -
+this folder.
+</p>
+</section>
+<section id="sec-2-2-2" >
+
+<h4><span class="section-number-4">2.2.2</span> Optionally Set <code>GIT_HOOKS_HOST_ID</code></h4>
+<p>
+Set environment variable <code>GIT_HOOKS_HOST_ID</code> if you want to include
+a host ID, e.g. hostname:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh"><span style="color: #483d8b;">export</span> <span style="color: #a0522d;">GIT_HOOKS_HOST_ID</span>=<span style="color: #ff00ff;">`hostname`</span>
+</pre>
+</div>
+</section>
+<section id="sec-2-2-3" >
+
+<h4><span class="section-number-4">2.2.3</span> Use the hooks for new git repositories</h4>
+<p>
+Add the following code to ~/.gitconfig:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-conf">[<span style="color: #228b22;">init</span>]
+     <span style="color: #a0522d;">templatedir</span> = /path/to/slbs-git-template/template
+</pre>
+</div>
+
+</section>
+<section id="sec-2-2-4" >
+
+<h4><span class="section-number-4">2.2.4</span> Use the hooks for existing git repositories</h4>
+<ul class="org-ul">
+<li>Do the steps in <a href="#sec-2-2-3">2.2.3</a>.
+</li>
+<li>Run git init in each git repository you want to use those hooks.
+</li>
+<li>Note existing files will not be deleted, but overwritten, e.g. the
+</li>
+<li>Warning: .git/description file will be overwritten!
+</li>
+</ul>
+</section>
+<section id="sec-2-2-5" >
+
+<h4><span class="section-number-4">2.2.5</span> Optionally disable the hooks (for single commands)</h4>
+<p>
+This is intended to be a switch to set for single commands where the
+hooks is not wanted, then set the variable <code>HOOKS=empty</code> (or any
+non-existing impl &#x2026; but more implementations might come in the
+future.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh"><span style="color: #a0522d;">HOOKS</span>=empty git ...
+</pre>
+</div>
+</section>
+<section id="sec-2-3" >
+
+<h3><span class="section-number-3">2.3</span> Implementations</h3>
+</section>
+<section id="sec-2-3-1" >
+
+<h4><span class="section-number-4">2.3.1</span> empty</h4>
+<p>
+Contains no hooks - and will newer contain any hooks.
+</p>
+</section>
+<section id="sec-2-3-2" >
+
+<h4><span class="section-number-4">2.3.2</span> default</h4>
+<ol class="org-ol"><li class="fragment none">commit-msg<br/><p>
+The commit-msg hook implements the above functionality.
+</p>
+</li></ol>
+</section>
+</section>
+</div>
+</div>
+<script src="http://lib.slbs.dk/reveal.js/v0.3-1123-g08fb6cb/lib/js/head.min.js"></script>
+<script src="http://lib.slbs.dk/reveal.js/v0.3-1123-g08fb6cb/js/reveal.min.js"></script>
+<script>
+
+        		// Full list of configuration options available here:
+        		// https://github.com/hakimel/reveal.js#configuration
+        		Reveal.initialize({
+        			controls: true,
+        			progress: true,
+        			history: false,
+        			center: true,
+                                slideNumber: true,
+        			rollingLinks: false,
+        			keyboard: true,
+        			overview: true,
+        			 // slide width
+        			 // slide height
+        			 // slide margin
+        			 // slide minimum scaling factor
+        			 // slide maximum scaling factor
+
+
+        			theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+        			transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+        			transitionSpeed: 'default',
+
+        			// Optional libraries used to extend on reveal.js
+        			dependencies: [
+        				{ src: 'http://lib.slbs.dk/reveal.js/v0.3-1123-g08fb6cb/lib/js/classList.js', condition: function() { return !document.body.classList; } }
+        				,{ src: 'http://lib.slbs.dk/reveal.js/v0.3-1123-g08fb6cb/plugin/markdown/showdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } }
+        				,{ src: 'http://lib.slbs.dk/reveal.js/v0.3-1123-g08fb6cb/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } }
+        				,{ src: 'http://lib.slbs.dk/reveal.js/v0.3-1123-g08fb6cb/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+        				,{ src: 'http://lib.slbs.dk/reveal.js/v0.3-1123-g08fb6cb/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } }
+        				,{ src: 'http://lib.slbs.dk/reveal.js/v0.3-1123-g08fb6cb/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+        				// { src: 'http://lib.slbs.dk/reveal.js/v0.3-1123-g08fb6cb/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; } }
+        				// { src: 'http://lib.slbs.dk/reveal.js/v0.3-1123-g08fb6cb/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+         				
+        			]
+        		});
+</script>
+</body>
+</html>
