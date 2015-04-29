@@ -1,5 +1,5 @@
 # -*-org-*-
-#+TITLE: SLBS @@html:<br>@@Git Template
+#+TITLE: SLBS Git Template
 
 * SLBS Git Template
 This is an alternative git template folder, actually it only contains
@@ -8,19 +8,26 @@ special hooks, but might change in the future.
 * GIT HOOKS
 
 The hooks can contain different implementations.
-At the moment there is [[default]] and [[empty]].
 
-[[empty]] implementation is empty. It is for selecting No hooks at all.
+** Implementations
 
-Which hooks implementation to use set the HOOKS environment variable.
-Eg. on the command line:
+Which hooks implementation to use set the =HOOKS= environment variable.
+Eg. To select empty hooks, then: on the command line:
 #+begin_src sh
 HOOKS=empty git ...
 #+end_src
 
-** The behavior for impl/[[default]]
+If =HOOKS= is undefined, then the [[default]] implementation is used.
 
-Those git hooks are for prefix first line with a commit message with
+*** empty
+Contains no hooks - and will newer contain any hooks.
+
+empty implementation is empty. It is for selecting No hooks at all.
+
+*** default
+The only hook this implementation contain is commit-msg.
+
+default are for prefix first line with a commit message with
 the branch that the commit is made on.
 
 Further an optional ID for the host the commit is created on can be
@@ -40,6 +47,9 @@ Where
 (included if =GIT_HOOKS_HOST_ID= is set) [] just shows that it is
 optional.
 The @ is prepended to the content in =GIT_HOOKS_HOST_ID=.
+
+**** commit-msg
+The commit-msg hook implements the above functionality.
 
 ** Usage
 *** Set =GIT_HOOKS_ROOT=
@@ -84,11 +94,7 @@ future.
 #+begin_src sh
 HOOKS=empty git ...
 #+end_src
+* License
+License: GNU General Public License, version 2
 
-** Implementations
-*** empty
-Contains no hooks - and will newer contain any hooks.
-
-*** default
-**** commit-msg
-The commit-msg hook implements the above functionality.
+See: [[LICENSE]] or https://www.gnu.org/licenses/gpl-2.0.html.
