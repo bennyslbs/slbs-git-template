@@ -59,11 +59,21 @@ Add the following code to ~/.gitconfig:
 [init]
      templatedir = /path/to/slbs-git-template/template
 #+end_src
+
+Note: The templates does not include a description file, like normal
+templates does, this is to prevent overwriting repository description
+files during git init on existing repository.
+
+The default content for =.git/description= is:
+
+#+begin_src
+Unnamed repository; edit this file 'description' to name the repository.
+#+end_src
+
 *** Use the hooks for existing git repositories
 - Do the steps in [[Use the hooks for new git repositories]].
 - Run git init in each git repository you want to use those hooks.
 - Note existing files will not be deleted, but overwritten, e.g. the
-- Warning: .git/description file will be overwritten!
 
 *** Optionally disable the hooks (for single commands)
 This is intended to be a switch to set for single commands where the
