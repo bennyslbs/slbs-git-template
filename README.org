@@ -52,6 +52,11 @@ The @ is prepended to the content in =GIT_HOOKS_HOST_ID=.
 **** commit-msg
 The commit-msg hook implements the above functionality.
 
+**** prepare-commit-msg
+The prepare-commit-msg calls commit-msg hook if it is a merge. This is
+done since commit-msg hook is not (always?) run during commit of
+merges.
+
 ** Usage
 *** Set =GIT_HOOKS_ROOT=
 Set environment variable =GIT_HOOKS_ROOT= to the root of this package -

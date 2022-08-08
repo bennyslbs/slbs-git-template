@@ -1,0 +1,10 @@
+#!/bin/sh
+echo `basename $0`: $@
+
+# Since merge messages not (always) are processed by the commit-msg, preprocess them
+
+case "$2,$3" in
+  merge,)
+    ./commit-msg
+  *) ;;
+esac
